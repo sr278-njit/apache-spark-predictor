@@ -1,0 +1,73 @@
+POM.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.njit.apache.spark</groupId>
+    <artifactId>apache-spark-predictorr</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.12</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <build>
+    </build>
+
+</project>
+
+Dockerfile
+
+FROM maven:3.6.0-jdk-11-slim
+RUN apt-get update && apt-get install -y curl vim wget software-properties-common ssh net-tools ca-certificates
+# RUN apt install -y maven
+# RUN apt-get install -y --allow-unauthenticated openjdk-11-jdk
+COPY apache-spark-predictor /usr/apache-spark-predictor/
+EXPOSE 8080
+
+# RUN find ${MAVEN_HOME}/boot/ -name plexus-classworlds-*.jar -type f -exec mv {} {}.old \;
+
+ENV SPARK_WORKER_LOG=/usr/logs/app.log \
+LOG_DIR=/usr/logs
+
+RUN mkdir -p $LOG_DIR && \
+touch $SPARK_WORKER_LOG && \
+ln -sf /dev/stdout $SPARK_WORKER_LOG
+
+WORKDIR /usr/apache-spark-predictor/
+RUN chmod +x predictor-start.sh
+
+WORKDIR /usr/apache-spark-predictor/
+RUN mvn clean install
+
+CMD ["/usr/apache-spark-predictor/predictor-start.sh"]
