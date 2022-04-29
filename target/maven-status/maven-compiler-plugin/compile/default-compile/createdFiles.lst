@@ -1,0 +1,6 @@
+net\njit\apache\spark\trainer\TrainingApplication.class
+net\njit\apache\spark\trainer\configuration\SparkConfiguration.class
+net\njit\apache\spark\trainer\service\SparkService.class
+net\njit\apache\spark\trainer\model\SparkModel.class
+net\njit\apache\spark\trainer\PredictionApplication.class
+net\njit\apache\spark\trainer\util\FileSanitizer.class
