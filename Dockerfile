@@ -14,10 +14,10 @@ RUN mkdir -p $LOG_DIR && \
 touch $SPARK_WORKER_LOG && \
 ln -sf /dev/stdout $SPARK_WORKER_LOG
 
-WORKDIR /usr/apache-spark-trainer/
+WORKDIR /usr/apache-spark-predictor/
 RUN chmod +x predictor-start.sh
 
-WORKDIR /usr/apache-spark-trainer/
+WORKDIR /usr/apache-spark-predictor/
 RUN mvn clean install
 
 CMD ["/usr/apache-spark-predictor/predictor-start.sh"]
