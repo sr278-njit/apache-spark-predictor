@@ -17,6 +17,13 @@ public class SparkConfiguration {
                 .config("spark.io.compression.codec", "snappy")
                 .config("spark.rdd.compress", "true")
                 .getOrCreate();
+        s.sparkContext()
+                .hadoopConfiguration().set("fs.s3a.access.key", System.getenv("AWS_ACCESS_KEY_ID"));
+        // Replace Key with your AWS secret key (You can find this on IAM
+        s.sparkContext()
+                .hadoopConfiguration().set("fs.s3a.secret.key", System.getenv("AWS_SECRET_ACCESS_KEY"));
+        s.sparkContext()
+                .hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com");
         s.sparkContext().setLogLevel("ERROR");
         return s;
     }

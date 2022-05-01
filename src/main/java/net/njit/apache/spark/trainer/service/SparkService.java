@@ -58,6 +58,15 @@ public class SparkService {
     }
 
     private Dataset<Row> getDataset(SparkSession s, String datasetPath) throws IOException {
+        Dataset<Row> hi = s.read().option("header", true)
+                .option("multiline", true)
+                .option("delimiter", ";")
+                .option("quote", "\"")
+                .option("inferSchema", true)
+                .csv("s3a://cc-assignmnt-2/Sanitized_TrainingDataset.csv");
+
+        hi.printSchema();
+
         return s.read().format("csv")
                 .option("header", true)
                 .option("multiline", true)
