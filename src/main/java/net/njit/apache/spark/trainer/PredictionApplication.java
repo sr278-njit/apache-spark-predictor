@@ -34,7 +34,7 @@ public class PredictionApplication {
         double f1 = evaluator.evaluate(predictionRows);
         System.out.println("Prediction Model F1 score is: " + f1);
 
-        sparkModel.getSparkSession().close();
+        sparkModel.getSparkSession().stop();
         System.exit(0);
     }
 }

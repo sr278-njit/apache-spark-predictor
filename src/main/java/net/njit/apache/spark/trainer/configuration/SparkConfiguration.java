@@ -13,7 +13,7 @@ public class SparkConfiguration {
         SparkSession s = SparkSession
                 .builder()
                 .appName(appName)
-                .master(String.format("spark://%s:7077", masterIp))
+                .master(masterIp)
                 .config("spark.eventLog.enabled", "false")
                 .config("spark.shuffle.service.enabled", "false")
                 .config("spark.dynamicAllocation.enabled", "false")

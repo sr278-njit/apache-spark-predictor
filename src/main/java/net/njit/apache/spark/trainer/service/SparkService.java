@@ -74,6 +74,7 @@ public class SparkService {
                     .replace("\"", "")
                     .replace(" ", "_"));
         }
+        rows.show();
         return rows;
     }
 
