@@ -9,8 +9,8 @@ public class SparkConfiguration {
         SparkSession s = SparkSession
                 .builder()
                 .appName(appName)
-                .master("local[*]")
-                .config("spark.master", "local")
+                .master("spark://ip-172-31-10-213:7077")
+                //.config("spark.master", "local")
                 .config("spark.eventLog.enabled", "false")
                 .config("spark.shuffle.service.enabled", "false")
                 .config("spark.dynamicAllocation.enabled", "false")
