@@ -32,7 +32,7 @@ public class TrainingApplication {
         RandomForestClassificationSummary rfSummary = model.summary();
         System.out.println("Prediction Model Accuracy is: " + rfSummary.accuracy());
         System.out.println("Prediction Model F1 score is: " + rfSummary.weightedFMeasure());
-        model.write().overwrite().save("/home/ubuntu/efs-mount/model/randomForest");
+        model.write().overwrite().save(System.getenv("OUTPUT_PATH"));
 
         sparkModel.getSparkSession().close();
         System.exit(0);
