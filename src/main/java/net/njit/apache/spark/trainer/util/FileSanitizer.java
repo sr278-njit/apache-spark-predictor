@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class FileSanitizer {
 
@@ -59,6 +60,6 @@ public class FileSanitizer {
         s3client.putObject(bucketName, fileName, new File(path));
 
         InputStream in = s3client.getObject(bucketName, fileName).getObjectContent();
-        Files.copy(in, Paths.get(path));
+        Files.copy(in, Paths.get(path), StandardCopyOption.REPLACE_EXISTING);
     }
 }
