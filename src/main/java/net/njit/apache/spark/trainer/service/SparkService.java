@@ -34,7 +34,10 @@ public class SparkService {
     public SparkModel getDatasetForModel(String appName, String datasetPathProperty) throws IOException {
         SparkSession sparkSession
                 = SparkConfiguration.getSparkSession(appName);
-        String datasetPath = FileSanitizer.getSanitizedFilePath(datasetPathProperty);
+        String datasetPath = System.getenv(datasetPathProperty);
+        if(datasetPath == null || datasetPath.isEmpty()) {
+            throw new RuntimeException(datasetPathProperty + " env var must be set");
+        }
         Dataset<Row> r = getDataset(sparkSession, datasetPath);
         System.out.println("Loaded dataset: " + datasetPath);
         castToDouble(r);
@@ -58,13 +61,20 @@ public class SparkService {
     }
 
     private Dataset<Row> getDataset(SparkSession s, String datasetPath) throws IOException {
-        return s.read().format("csv")
+        Dataset<Row> rows = s.read().format("csv")
                 .option("header", true)
                 .option("multiline", true)
                 .option("delimiter", ";")
                 .option("quote", "\"")
                 .option("inferSchema", true)
                 .load(datasetPath);
+
+        for(String column: rows.schema().fieldNames()) {
+            rows = rows.withColumnRenamed(column, column
+                    .replace("\"", "")
+                    .replace(" ", "_"));
+        }
+        return rows;
     }
 
     private static void castToDouble(Dataset<Row> r) {

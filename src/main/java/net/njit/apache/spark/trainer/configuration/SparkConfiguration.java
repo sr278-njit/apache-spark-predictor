@@ -6,11 +6,14 @@ public class SparkConfiguration {
 
 
     public static SparkSession getSparkSession(String appName) {
+        String masterIp = System.getenv("MASTER_IP");
+        if (masterIp == null || masterIp.isEmpty()) {
+            throw new RuntimeException("MASTER_IP must be set");
+        }
         SparkSession s = SparkSession
                 .builder()
                 .appName(appName)
-                .master("local[*]")
-                .config("spark.master", "local")
+                .master(String.format("spark://%s:7077", masterIp))
                 .config("spark.eventLog.enabled", "false")
                 .config("spark.shuffle.service.enabled", "false")
                 .config("spark.dynamicAllocation.enabled", "false")
