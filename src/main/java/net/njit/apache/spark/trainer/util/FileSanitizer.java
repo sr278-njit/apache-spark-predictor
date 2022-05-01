@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -42,7 +43,7 @@ public class FileSanitizer {
 
     }
 
-    private static void writeSanitizedToS3(String fileName, String path) {
+    private static void writeSanitizedToS3(String fileName, String path) throws IOException {
         AmazonS3 s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new EnvironmentVariableCredentialsProvider())
@@ -56,5 +57,8 @@ public class FileSanitizer {
         }
 
         s3client.putObject(bucketName, fileName, new File(path));
+
+        InputStream in = s3client.getObject(bucketName, fileName).getObjectContent();
+        Files.copy(in, Paths.get(path));
     }
 }
